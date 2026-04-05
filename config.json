@@ -5,5 +5,6 @@
   "logs_dir": "./logs",
   "max_agents": 2,
   "max_files_per_agent": 50,
-  "delay_before_read_ms": 200
+  "delay_before_read_ms": 200,
+  "api_port": 8080
 }

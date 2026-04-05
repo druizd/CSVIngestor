@@ -47,3 +47,10 @@ EVENT: 2026/04/05 18:27:37 logger.go:63: Agente #3 terminado.
 EVENT: 2026/04/05 18:27:37 logger.go:63: Agente #4 terminado.
 EVENT: 2026/04/05 18:27:37 logger.go:63: Agente #1 terminado.
 EVENT: 2026/04/05 18:27:37 logger.go:63: Servicio detenido correctamente.
+EVENT: 2026/04/05 19:52:11 logger.go:63: Servicio CSV Processor iniciado en modo nativo de Windows (SCM).
+EVENT: 2026/04/05 19:52:11 logger.go:63: Agente #0 iniciado.
+EVENT: 2026/04/05 19:52:11 logger.go:63: Agente #1 iniciado.
+EVENT: 2026/04/05 19:53:37 logger.go:63: Servicio CSV Processor iniciado en modo nativo de Windows (SCM).
+EVENT: 2026/04/05 19:53:37 logger.go:63: Agente #0 iniciado.
+EVENT: 2026/04/05 19:53:37 logger.go:63: Iniciando API de Auditoría Remota en 0.0.0.0:8080
+EVENT: 2026/04/05 19:53:37 logger.go:63: Agente #1 iniciado.
