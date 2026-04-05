@@ -6,6 +6,7 @@ import (
 	"csvprocessor/internal/logger"
 	"csvprocessor/internal/processor"
 	"sync"
+	"time"
 )
 
 // Agent represents a worker that reads files off the queue.
@@ -23,12 +24,17 @@ func agentLoop(agentID int, cfg *config.Config, fileChan <-chan string, wg *sync
 
 	for filePath := range fileChan {
 		logger.Info("Agente #%d procesando: %s", agentID, filePath)
+		
+		startProc := time.Now()
 		err := processor.ProcessFile(cfg, filePath)
+		elapsedMs := uint64(time.Since(startProc).Milliseconds())
+
 		if err != nil {
 			logger.Error("Agente #%d falló procesando %s: %v", agentID, filePath, err)
+			api.RecordMetrics(false, elapsedMs)
 		} else {
 			logger.Info("Agente #%d terminó exitosamente con: %s", agentID, filePath)
-			api.IncrementProcessed()
+			api.RecordMetrics(true, elapsedMs)
 		}
 
 		filesProcessed++
