@@ -1,6 +1,6 @@
 # CSV to SQL Processor (Windows Service)
 
-Demonio (Windows Service Nativo) desarrollado en Go para el procesamiento asíncrono y continuo de archivos CSV. Escanea un directorio de entrada, parsea contenidos de archivos bajo patrones estrictos usando manejo nativo de memoria en CPU (`strings.Builder`) y genera archivos SQL de inserción correspondientes. 
+Demonio (Windows Service Nativo) desarrollado en Go para el procesamiento asíncrono y continuo de archivos CSV. Escanea un directorio de entrada, parsea contenidos de archivos bajo patrones estrictos usando manejo nativo de memoria en CPU (`strings.Builder`) y genera archivos SQL de inserción **compatibles con TimescaleDB hypertables**.
 
 ## Características
 
@@ -39,16 +39,42 @@ El archivo `config.json` se encuentra siempre alojado junto al ejecutable (posee
 
 ```json
 {
-  "input_dir": "./input",
-  "sql_log_dir": "./sqllog",
-  "csv_log_dir": "./csvlog",
-  "logs_dir": "./logs",
-  "max_agents": 2,
+  "input_dir":           "./input",
+  "sql_log_dir":         "./sqllog",
+  "csv_log_dir":         "./csvlog",
+  "logs_dir":            "./logs",
+  "max_agents":          2,
   "max_files_per_agent": 50,
   "delay_before_read_ms": 200,
-  "api_port": 8080
+  "api_port":            8080
 }
 ```
+
+---
+
+## SQL Generado (Formato TimescaleDB)
+
+Cada archivo `.sql` producido es **idempotente** y compatible con TimescaleDB. Incluye:
+
+```sql
+-- 1. Crea la tabla si no existe
+CREATE TABLE IF NOT EXISTS log_records (
+    primary_id     VARCHAR(50)  NOT NULL,
+    reception_date DATE         NOT NULL,
+    record_name    VARCHAR(50)  NOT NULL,
+    record_ts      TIMESTAMPTZ  NOT NULL,  -- fecha+hora combinadas para la hypertable
+    record_value   FLOAT
+);
+
+-- 2. Convierte en hypertable (no falla si ya lo es)
+SELECT create_hypertable('log_records', 'record_ts', if_not_exists => TRUE);
+
+-- 3. Inserciones de datos
+INSERT INTO log_records (primary_id, reception_date, record_name, record_ts, record_value)
+VALUES ('151.20.35.10', '2024-03-26', 'MiIndicador', '2024-03-26 17:00', 3.14);
+```
+
+> **Nota**: `record_date` y `record_time` del CSV se combinan en una sola columna `record_ts TIMESTAMPTZ`, requerida por TimescaleDB para la partición temporal.
 
 ---
 
