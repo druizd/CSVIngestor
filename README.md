@@ -1,4 +1,4 @@
-<<<<<<< Updated upstream
+
 # CSV to SQL Processor (Windows Service)
 
 Demonio (Windows Service Nativo) desarrollado en Go para el procesamiento asíncrono y continuo de archivos CSV. Escanea un directorio de entrada, parsea contenidos de archivos bajo patrones estrictos usando manejo nativo de memoria en CPU (`strings.Builder`) y genera archivos SQL de inserción **compatibles con TimescaleDB hypertables**.
